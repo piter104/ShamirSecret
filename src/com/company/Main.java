@@ -8,8 +8,8 @@ import java.util.Map;
 public class Main {
     static final Integer secret = 456;
     static final Integer k = 1000;
-    static final Integer n = 4;
-    static final Integer t = 2;
+    static final Integer n = 10;
+    static final Integer t = 5;
 
     public static void main(String[] args) {
         System.out.println("Metoda Trywialna");

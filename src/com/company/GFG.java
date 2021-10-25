@@ -1,34 +1,43 @@
 package com.company;
 
-// Java program for implementation
-// of Lagrange's Interpolation
-
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.List;
 
 class GFG {
-    // function to interpolate the given
-    // data points using Lagrange's formula
-    static BigInteger interpolate(List<SecretShare> f, int n, BigInteger p) {
-        BigInteger result = new BigInteger(String.valueOf(0)); // Initialize result
-        f.remove(0);
-        for (int i = 0; i < n; i++) {
-            // Compute individual terms of above formula
-            BigInteger term = f.get(i).getShare();
-            for (int j = 0; j < n; j++) {
-                if (j != i)
-                    term = term.multiply(f.get(j).getNumber()
-                            .divide(f.get(i).getNumber()
-                                    .subtract(f.get(j).getNumber())));
+
+    static BigInteger interpolate(List<SecretShare> f, int t, BigInteger p) {
+        BigInteger result = BigInteger.ZERO;
+
+        for (int i = 1; i < t + 1; i++) {
+            BigDecimal up;
+            BigDecimal down;
+            BigDecimal laGrange;
+            BigDecimal term = new BigDecimal(1);
+
+            for (int j = 1; j < t + 1; j++) {
+                if (j != i) {
+                    up = new BigDecimal(f.get(j).getNumber().negate());
+
+                    down = new BigDecimal(f.get(i).getNumber())
+                            .subtract(new BigDecimal(f.get(j).getNumber()));
+
+                    term = term.multiply(up.divide(down,
+                            15, RoundingMode.HALF_UP));
+                }
             }
 
-            // Add current term to result
-            result = result.add(term);
-            System.out.println("i: " + i + " = " + result);
+            laGrange = new BigDecimal(f.get(i).getShare()).multiply(term);
+
+            System.out.println("i: " + i + " laGrange = " + laGrange);
+
+            result = result.add(laGrange.toBigInteger().mod(p));
+            System.out.println("i: " + i + " result = " + result);
         }
+
         System.out.println(result.abs().mod(p));
+
         return result;
     }
 }
-
-// This code is contributed by 29AjayKumar
